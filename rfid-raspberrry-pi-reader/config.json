@@ -1,0 +1,5 @@
+{
+  "interval": 2000,
+  "deviceId": "RFID Raspberry Pi Node",
+  "azureIoTHubDeviceConnectionString": ""
+}
