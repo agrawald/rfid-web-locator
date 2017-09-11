@@ -3,41 +3,25 @@
 const AzureIoTClient = require('azure-iot-device').Client;
 const AzureIoTMessage = require('azure-iot-device').Message;
 const AzureIoTMqtt = require('azure-iot-device-mqtt').Mqtt;
-const AzureIoTBi = require('az-iot-bi');
-const Simulated = require('sensor/simulated');
-const WPI = require('./wpi.js');
-
-const wpi = new WPI();
+const Simulated = require('./sensor/simulated');
 
 let sendingMessage = false;
 const simulatedSensor = new Simulated();
 function AzureIoT(config) {
   this.config = config;
-  AzureIoTBi.start();
-  let deviceInfo = {device: "RaspberryPi", language: "NodeJS"};
-  if (AzureIoTBi.isBIEnabled()) {
-    AzureIoTBi.trackEventWithoutInternalProperties('yes', deviceInfo);
-    AzureIoTBi.trackEvent('success', deviceInfo);
-  } else {
-    AzureIoTBi.trackEventWithoutInternalProperties('no', deviceInfo);
-  }
-  AzureIoTBi.flush();
-
+  console.log("Initializing the Azure IoT client...");
   this.initClient();
 }
 
 AzureIoT.prototype.sendMessage = function (content) {
-  if (!sendingMessage) {
-    return;
-  }
-  decorateContent(content);
+  content.deviceId = this.getDeviceId();
+  content.data = simulatedSensor.read();
   let message = new AzureIoTMessage(JSON.stringify(content));
-  console.log('Sending message: ' + content);
+  console.log('Sending message: ' + JSON.stringify(content));
   this.client.sendEvent(message, (err) => {
     if (err) {
       console.error('Failed to send message to Azure IoT Hub');
     } else {
-      wpi.blinkLED();
       console.log('Message sent to Azure IoT Hub');
     }
   });
@@ -78,12 +62,6 @@ AzureIoT.prototype.getDeviceId = function () {
 };
 
 
-function decorateContent(content) {
-  content.deviceId = this.getDeviceId();
-  content.data = simulatedSensor.read();
-}
-
-
 function onStart(request, response) {
   console.log('Try to invoke method start(' + request.payload || '' + ')');
   sendingMessage = true;
@@ -107,7 +85,6 @@ function onStop(request, response) {
 }
 
 function receiveMessageCallback(msg) {
-  wpi.blinkLED();
   let message = msg.getData().toString('utf-8');
   AzureIoTClient.complete(msg, () => {
     console.log('Receive message: ' + message);

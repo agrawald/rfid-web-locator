@@ -1,5 +1,5 @@
 {
   "interval": 2000,
   "deviceId": "RFID Raspberry Pi Node",
-  "azureIoTHubDeviceConnectionString": ""
+  "azureIoTHubDeviceConnectionString": "HostName=iotHubRFID.azure-devices.net;DeviceId=rfid_raspberry_pi;SharedAccessKey=+0+mQi58+whcEiUpLbU/yRT/jQymBNoi+h1oRvEb3bU="
 }
