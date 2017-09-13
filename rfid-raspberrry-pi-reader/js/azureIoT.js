@@ -41,15 +41,6 @@ AzureIoT.prototype.initClient = function () {
     this.client.onDeviceMethod('start', onStart);
     this.client.onDeviceMethod('stop', onStop);
     this.client.on('message', receiveMessageCallback);
-    setInterval(() => {
-      this.client.getTwin((err, twin) => {
-        if (err) {
-          console.error("get twin message error");
-          return;
-        }
-        this.config.interval = twin.properties.desired.interval || this.config.interval;
-      });
-    }, this.config.interval);
   });
 };
 
