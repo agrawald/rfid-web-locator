@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Sensor} from '../model/sensor';
-import {Headers, Http} from "@angular/http";
-import {Observable} from "rxjs/Observable";
+import {Headers, Http} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {environment} from "../../environments/environment";
+import {environment} from '../../environments/environment';
 
 @Injectable()
 export class SensorService {
@@ -12,12 +12,15 @@ export class SensorService {
 
   constructor(private http: Http) {
     const sas = environment.sas;
-    Object.keys(sas).forEach(key => this.queryParams.set(key, sas[key]));
+    const keys = Object.keys(sas);
+    for (const key of keys) {
+      this.queryParams.set(key, sas[key]);
+    }
     this.headers.append('Accept', 'application/json');
   }
 
   getAll(): Observable<Sensor[]> {
-    let sensors$ = this.http
+    const sensors$ = this.http
       .get(`${environment.baseUrl}`, {
         headers: this.headers,
         search: this.queryParams
@@ -34,8 +37,10 @@ export class SensorService {
   }
 
   save(sensor: Sensor) {
-    let originalSensor = SENSORS.find(p => p.id === sensor.id);
-    if (originalSensor) Object.assign(originalSensor, sensor);
+    const originalSensor = SENSORS.find(p => p.id === sensor.id);
+    if (originalSensor) {
+      Object.assign(originalSensor, sensor);
+    }
     // saved muahahaha
   }
 
@@ -45,7 +50,7 @@ export class SensorService {
   }
 
   toSensor(r: any): Sensor {
-    let sensors = <Sensor>({
+    const sensors = <Sensor>({
       id: r.id,
       deviceId: r.deviceId,
       data: {
@@ -65,8 +70,8 @@ export class SensorService {
 
 const SENSORS: Sensor[] = [
   {
-    id: "0ed06a7b",
-    deviceId: "RFID Raspberry Pi Node",
+    id: '0ed06a7b',
+    deviceId: 'RFID Raspberry Pi Node',
     data: {
       temperature: 23.932926196139306, humidity: 61.26553820911795, location: {
         lat: -33.86785, lng: 151.20732
@@ -74,8 +79,8 @@ const SENSORS: Sensor[] = [
     }
   },
   {
-    id: "0ed06a7b",
-    deviceId: "RFID Raspberry Pi Node",
+    id: '0ed06a7b',
+    deviceId: 'RFID Raspberry Pi Node',
     data: {
       temperature: 23.932926196139306, humidity: 61.26553820911795, location: {
         lat: -42.87936, lng: 147.32941
@@ -83,8 +88,8 @@ const SENSORS: Sensor[] = [
     }
   },
   {
-    id: "0ed06a7b",
-    deviceId: "RFID Raspberry Pi Node",
+    id: '0ed06a7b',
+    deviceId: 'RFID Raspberry Pi Node',
     data: {
       temperature: 23.932926196139306,
       humidity: 61.26553820911795,
