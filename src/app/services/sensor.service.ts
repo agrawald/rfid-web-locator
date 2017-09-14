@@ -1,33 +1,44 @@
 import {Injectable} from '@angular/core';
 import {Sensor} from '../model/sensor';
-import {Headers, Http} from '@angular/http';
+import {Headers, Http, RequestOptions, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {environment} from '../../environments/environment';
+import {Data} from "../model/data";
+
+function getParams() {
+  const params = new URLSearchParams();
+  const sas = environment.sas;
+  const keys = Object.keys(sas);
+  keys.forEach(key => params.set(key, sas[key]));
+  return params;
+}
+
+function getHeaders() {
+  const headers = new Headers();
+  headers.set('Accept', 'application/json');
+  return headers;
+}
+
+function getOptions() {
+  const options = new RequestOptions({headers: getHeaders()});
+  options.params = getParams();
+  return options;
+}
+
 
 @Injectable()
 export class SensorService {
-  private queryParams = new URLSearchParams();
-  private headers = new Headers();
 
   constructor(private http: Http) {
-    const sas = environment.sas;
-    const keys = Object.keys(sas);
-    for (const key of keys) {
-      this.queryParams.set(key, sas[key]);
-    }
-    this.headers.append('Accept', 'application/json');
   }
 
   getAll(): Observable<Sensor[]> {
     const sensors$ = this.http
-      .get(`${environment.baseUrl}`, {
-        headers: this.headers,
-        search: this.queryParams
-      })
+      .get(`${environment.baseUrl}`, getOptions())
       .map((response) => {
         const json = response.json();
-        return json.value.map(record => record.message[0]);
+        return json.value.map(this.toSensor);
       });
     return sensors$;
   }
@@ -49,21 +60,21 @@ export class SensorService {
     return JSON.parse(JSON.stringify(object));
   }
 
-  toSensor(r: any): Sensor {
-    const sensors = <Sensor>({
-      id: r.id,
-      deviceId: r.deviceId,
-      data: {
-        temperature: r.data.temperature,
-        humidity: r.data.humidity,
-        location: {
-          lat: r.data.location.lat,
-          lng: r.data.location.lng
-        }
-      },
-    });
-    console.log('Parsed person:', sensors);
-    return sensors;
+  toSensor(record: any): Sensor {
+    const message = JSON.parse(record.message)[0];
+    const sensor = new Sensor();
+    sensor.id = message.id;
+    sensor.deviceId = message.deviceId;
+    if (message.data) {
+      sensor.data.temperature = message.data.temperature;
+      sensor.data.humidity = message.data.humidity;
+      if (message.data.location) {
+        sensor.data.location.lng = message.data.location.lng;
+        sensor.data.location.lat = message.data.location.lat;
+      }
+    }
+    console.log('Parsed person:', sensor);
+    return sensor;
   }
 }
 

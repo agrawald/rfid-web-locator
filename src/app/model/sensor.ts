@@ -1,7 +1,7 @@
-import {Data} from "./data";
+import {Data} from './data';
 
 export class Sensor {
   id: string;
   deviceId: string;
-  data: Data;
+  data: Data = new Data();
 }
