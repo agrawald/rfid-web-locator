@@ -4,7 +4,6 @@ import {Headers, Http, RequestOptions, URLSearchParams} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {environment} from '../../environments/environment';
-import {Data} from "../model/data";
 
 function getParams() {
   const params = new URLSearchParams();

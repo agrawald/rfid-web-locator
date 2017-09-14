@@ -22,8 +22,8 @@
     "@angular/platform-browser": "^4.2.4",
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/router": "^4.2.4",
-    "azure-storage": "^2.5.0",
     "core-js": "^2.4.1",
+    "ngx-bootstrap": "^1.9.3",
     "rxjs": "^5.4.3",
     "zone.js": "^0.8.14"
   },
