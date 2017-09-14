@@ -53,7 +53,7 @@ export class AppComponent implements AfterContentInit {
   }
 
   private repositionMap() {
-    if(this.geolocationPosition){
+    if (this.geolocationPosition) {
       this.agmMap.latitude = this.geolocationPosition.coords.latitude;
       this.agmMap.longitude = this.geolocationPosition.coords.longitude;
     }
