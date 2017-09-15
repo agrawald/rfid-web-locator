@@ -15,6 +15,7 @@
   </div>
   <agm-map [usePanning]="true"
            [zoom]="zoomLevel"
+           [streetViewControl]="false"
            (mapReady)="OnMapReady($event)"
   >
     <agm-marker *ngFor="let sensor of sensors"
