@@ -1,0 +1,19 @@
+.map-wrapper {
+  position: relative;
+  height: calc(100vh);
+}
+
+agm-map {
+  height: inherit;
+}
+
+.container {
+  width: 25%;
+  z-index: 1000;
+  position: absolute;
+  padding: 10px
+}
+
+.container button {
+  cursor: pointer;
+}
