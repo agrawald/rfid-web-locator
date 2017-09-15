@@ -32,7 +32,7 @@ export class SensorService {
   constructor(private http: Http) {
   }
 
-  getAll(): Observable<Sensor[]> {
+  findAll(): Observable<Sensor[]> {
     const sensors$ = this.http
       .get(`${environment.baseUrl}`, getOptions())
       .map((response) => {
@@ -42,21 +42,16 @@ export class SensorService {
     return sensors$;
   }
 
-  get(id: string): Sensor {
-    return this.clone(SENSORS.find(p => p.id === id));
-  }
-
-  save(sensor: Sensor) {
-    const originalSensor = SENSORS.find(p => p.id === sensor.id);
-    if (originalSensor) {
-      Object.assign(originalSensor, sensor);
-    }
-    // saved muahahaha
-  }
-
-  private clone(object: any) {
-    // hack
-    return JSON.parse(JSON.stringify(object));
+  findAllFor(rfid: string): Observable<Sensor[]> {
+    const options = getOptions();
+    options.params.set('$filter', 'id eq \'' + rfid + '\'');
+    const sensor$ = this.http
+      .get(`${environment.baseUrl}`, options)
+      .map((response) => {
+        const json = response.json();
+        return json.value.map(this.toSensor);
+      });
+    return sensor$;
   }
 
   toSensor(record: any): Sensor {

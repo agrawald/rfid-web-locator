@@ -21,7 +21,7 @@ export class AppComponent implements AfterContentInit {
 
   OnMapReady($event) {
     this.initCurrentLocation();
-    this.sensorSvc.getAll().subscribe(data => this.sensors = data);
+    this.sensorSvc.findAll().subscribe(data => this.sensors = data);
   }
 
   ngAfterContentInit(): void {
@@ -71,5 +71,19 @@ export class AppComponent implements AfterContentInit {
     document.getElementById('mySidenav').style.width = '0';
     document.getElementById('map-wrapper').style.marginLeft = '0';
     document.getElementById('map-wrapper').style.backgroundColor = 'white';
+  }
+
+  submitForm(form: any): void {
+    if (form.rfid) {
+      this.sensorSvc.findAllFor(form.rfid).subscribe(data => {
+        this.sensors = data;
+        this.repositionMap();
+      });
+    } else {
+      this.sensorSvc.findAll().subscribe(data => {
+        this.sensors = data;
+        this.repositionMap();
+      });
+    }
   }
 }
