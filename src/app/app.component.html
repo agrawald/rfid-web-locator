@@ -1,22 +1,18 @@
 <!-- this creates a google map on the page with the given lat/lng from -->
 <!-- the component as the initial center of the map: -->
-<div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+<div class="map-wrapper" id="map-wrapper">
   <div class="container">
     <form #form="ngForm" (ngSubmit)="submitForm(form.value)">
-      <div class="form-group">
+      <div class="input-group">
         <input class="form-control" name="rfid" type="text" placeholder="Search for RFID" ngModel required>
-      </div>
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary">Go</button>
+        <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary" aria-label="Search" (click)="openNav()">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+          </span>
       </div>
     </form>
   </div>
-</div>
-<div class="map-wrapper" id="map-wrapper">
-  <button type="button" class="btn btn-default openBtn" aria-label="Search" (click)="openNav()">
-    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-  </button>
   <agm-map [usePanning]="true"
            [zoom]="zoomLevel"
            (mapReady)="OnMapReady($event)"
